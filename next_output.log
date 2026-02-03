@@ -1,0 +1,21 @@
+
+> tmp-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+✓ Ready in 1563ms
+○ Compiling / ...
+ GET / 200 in 7.8s (compile: 6.6s, render: 1243ms)
+ GET / 200 in 114ms (compile: 7ms, render: 108ms)
+ GET /api/preview/56b3d7f1-19db-4dd5-90c5-866a74f85530/index.html 200 in 877ms
+ GET / 200 in 90ms (compile: 7ms, render: 83ms)
+ GET /api/preview/6dddf20a-f71c-4ea0-a5ea-88f834f5ea37/index.html 404 in 101ms (compile: 93ms, render: 8ms)
