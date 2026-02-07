@@ -21,7 +21,7 @@ function getMimeType(filePath: string): string {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { projectId: string; path: string[] } }
+  { params }: { params: Promise<{ projectId: string; path?: string[] }> }
 ) {
   const { projectId, path: pathSegments } = await params;
 
