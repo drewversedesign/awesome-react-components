@@ -59,4 +59,4 @@ The system uses a robust system prompt defined in `src/lib/gemini.ts` that enfor
 - **Next.js App Generation**: Currently, the system generates static HTML/CSS/JS. To support Next.js generation, the backend would need to trigger a build process or use a sandbox like WebContainer.
 - **Authentication**: Add NextAuth.js or Clerk to save projects to a user profile.
 - **Cloud Deployment**: Integrate with Vercel API or Netlify API to deploy the generated code with one click.
-- **Database Persistence**: Replace the temporary directory with a database (e.g., Supabase, PostgreSQL) and a blob store (e.g., S3) for long-term project storage.
+- **Database Persistence**: Already integrated with **Neon**. Every project and file is saved to Neon for long-term storage, enabling previews even after server restarts.

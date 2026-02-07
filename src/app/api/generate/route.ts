@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateProject } from "@/lib/gemini";
+import { saveProject } from "@/lib/db";
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -14,6 +15,19 @@ export async function POST(req: NextRequest) {
     const { prompt, history, currentFiles, projectId } = await req.json();
 
     const result = await generateProject(apiKey, prompt, history, currentFiles);
+
+    // Save to Neon Database for persistence
+    try {
+        const fullHistory = [...history, { role: "user", parts: [{ text: prompt }] }, { role: "model", parts: [{ text: `Built project: ${result.projectName}` }] }];
+        const dbMessages = fullHistory.map(h => ({
+            role: h.role,
+            content: h.parts[0].text
+        }));
+        await saveProject(projectId, result.projectName, result.files, dbMessages);
+    } catch (dbError) {
+        console.error("Failed to save to database:", dbError);
+        // We continue anyway as we have the result and local storage fallback
+    }
 
     // Save to temp workspace
     const tempDir = path.join(os.tmpdir(), "ai-builder", projectId);

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getFileContent, getProjectFiles } from "@/lib/db";
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -34,14 +35,23 @@ export async function GET(
   }
 
   if (!fs.existsSync(filePath)) {
-    // If it's a directory or doesn't exist, try index.html
-    const indexHtml = path.join(filePath, "index.html");
-    if (fs.existsSync(indexHtml)) {
-        const content = fs.readFileSync(indexHtml);
-        return new NextResponse(content, {
-            headers: { "Content-Type": "text/html" }
-        });
+    // Try Neon Database if not in local temp storage
+    try {
+        const relativePath = (pathSegments || []).join("/") || "index.html";
+        const content = await getFileContent(projectId, relativePath);
+
+        if (content) {
+            return new NextResponse(content, {
+                headers: {
+                    "Content-Type": getMimeType(relativePath),
+                    "Access-Control-Allow-Origin": "*",
+                }
+            });
+        }
+    } catch (dbError) {
+        console.error("DB Fetch Error:", dbError);
     }
+
     return new NextResponse("File not found", { status: 404 });
   }
 

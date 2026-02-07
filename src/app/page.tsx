@@ -30,8 +30,14 @@ export default function Home() {
 
   // Initialize Project ID if not exists
   useEffect(() => {
-    if (!projectId) {
-      setProjectId(uuidv4());
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+        setProjectId(hash);
+        loadProject(hash);
+    } else if (!projectId) {
+      const newId = uuidv4();
+      setProjectId(newId);
+      window.location.hash = newId;
     }
     const savedKey = localStorage.getItem("gemini_api_key");
     if (savedKey) {
@@ -40,6 +46,25 @@ export default function Home() {
         setShowKeyInput(true);
     }
   }, []);
+
+  const loadProject = async (id: string) => {
+    setIsLoading(true);
+    try {
+        const res = await fetch(`/api/project/${id}`);
+        const data = await res.json();
+        if (data.files) {
+            setFiles(data.files);
+            setMessages(data.messages);
+            if (data.files.length > 0) {
+                setActiveFile(data.files[0].path);
+            }
+        }
+    } catch (e) {
+        console.error("Failed to load project", e);
+    } finally {
+        setIsLoading(false);
+    }
+  };
 
   const handleSaveApiKey = (key: string) => {
     setApiKey(key);
